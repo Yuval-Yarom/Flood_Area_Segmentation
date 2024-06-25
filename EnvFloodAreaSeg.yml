@@ -4,10 +4,14 @@ channels:
   - nvidia
   - conda-forge
 dependencies:
-  - python=3.12
-  - tensorflow
+  - python=3.11
   - numpy
   - pandas
   - matplotlib
   - scikit-learn
   - jupyter
+  - pytorch
+  - scipy
+  - pydot
+  - seaborn
+  - torchvision
