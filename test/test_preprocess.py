@@ -4,7 +4,7 @@ from PIL import Image
 import torch
 from torchvision import transforms
 import matplotlib.pyplot as plt
-from scripts.preprocess import augment_translate, augment_scale, augment_flip, augment_rotate, augment_promotion
+from scripts.preprocess import augment_translate, augment_scale, augment_flip, augment_rotate, augment_promotion, plot_histogram
 
 def load_image(image_path):
     return Image.open(image_path).convert('RGB')
@@ -21,9 +21,14 @@ def save_images(original, augmented, base_filename, aug_name):
 
     original_image_path = os.path.join(save_dir, f'{base_filename}_before.png')
     augmented_image_path = os.path.join(save_dir, f'{base_filename}_{aug_name}.png')
+    original_hist_path = os.path.join(save_dir, f'{base_filename}_before_hist.png')
+    augmented_hist_path = os.path.join(save_dir, f'{base_filename}_{aug_name}_hist.png')
 
     save_image(original, original_image_path)
     save_image(augmented, augmented_image_path)
+
+    plot_histogram(torch.tensor(np.array(original)), f'{base_filename} Before Histogram', original_hist_path)
+    plot_histogram(torch.tensor(np.array(augmented)), f'{base_filename} {aug_name} Histogram', augmented_hist_path)
 
 def pil_to_tensor(image):
     transform = transforms.ToTensor()

@@ -6,6 +6,7 @@ from torchvision import transforms
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 
 def load_metadata(metadata_path):
@@ -38,6 +39,23 @@ def preprocess_mask(mask_path, target_size=(256, 256)):
     except Exception as e:
         print(f"Error processing mask {mask_path}: {e}")
         return None
+
+
+def plot_histogram(image, title, save_path):
+    plt.figure()
+    if image.shape[0] == 3:  # RGB image
+        colors = ('r', 'g', 'b')
+        for i, color in enumerate(colors):
+            hist = torch.histc(image[i], bins=256, min=0, max=1)
+            plt.plot(hist.cpu().numpy(), color=color)
+    else:  # Grayscale image
+        hist = torch.histc(image, bins=256, min=0, max=1)
+        plt.plot(hist.cpu().numpy(), color='black')
+    plt.title(title)
+    plt.xlabel('Pixel Value')
+    plt.ylabel('Frequency')
+    plt.savefig(save_path)
+    plt.close()
 
 
 def augment_translate(image, mask):
@@ -145,6 +163,10 @@ def save_augmented_data(images_dir, masks_dir, test_metadata):
                 aug_mask_path = aug_masks_dir / aug_mask_filename
                 transforms.ToPILImage()(augmented_image).save(aug_image_path)
                 transforms.ToPILImage()(augmented_mask).save(aug_mask_path)
+                plot_histogram(augmented_image, f'{aug_name} Image Histogram',
+                               aug_images_dir / f"{os.path.splitext(aug_image_filename)[0]}_hist.png")
+                plot_histogram(augmented_mask, f'{aug_name} Mask Histogram',
+                               aug_masks_dir / f"{os.path.splitext(aug_mask_filename)[0]}_hist.png")
                 augmented_metadata.append({
                     'Image': str(aug_image_path.relative_to(base_path)),
                     'Mask': str(aug_mask_path.relative_to(base_path))
@@ -179,11 +201,11 @@ def preprocess_data(metadata_path, images_dir, masks_dir, target_size=(256, 256)
 
 
 if __name__ == "__main__":
-    metadata_path = '../Data/raw/metadata.csv'
-    images_dir = '../Data/raw/images'
-    masks_dir = '../Data/raw/masks'
+    metadata_path = '../data/raw/metadata.csv'
+    images_dir = '../data/raw/images'
+    masks_dir = '../data/raw/masks'
     images, masks, metadata = preprocess_data(metadata_path, images_dir, masks_dir)
     X_train, X_temp, y_train, y_temp = train_test_split(images, masks, test_size=0.3, random_state=42)
     X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
-    Path('../Data/processed').mkdir(parents=True, exist_ok=True)
+    Path('../data/processed').mkdir(parents=True, exist_ok=True)
     save_augmented_data(images_dir, masks_dir, metadata)
