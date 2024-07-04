@@ -1,10 +1,10 @@
 import os
 import pandas as pd
 
-IMAGES_DIR = '../data/raw/images'
-MASKS_DIR = '../data/raw/masks'
-METADATA_PATH = '../Data/raw/metadata.csv'
-AUGMENTED_METADATA_PATH = '../data/processed/augmentation/augmented_metadata.csv'
+IMAGES_DIR = 'Data/raw/images'
+MASKS_DIR = 'Data/raw/masks'
+METADATA_PATH = 'Data/raw/metadata.csv'
+AUGMENTED_METADATA_PATH = 'Data/processed/augmentation/augmented_metadata.csv'
 def get_processed_images_and_masks():
     metadata = pd.read_csv(METADATA_PATH)
     images = [os.path.join(IMAGES_DIR, img) for img in metadata['Image']]
