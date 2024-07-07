@@ -1,0 +1,16 @@
+# Python
+*.ckpt
+*.pth
+*.pt
+.ipynb_checkpoints*
+*.npz
+*.npy
+*TMP*.ipynb
+*TMP*.py
+*TEMP*.ipynb
+*TEMP*.py
+
+# Folders
+__pycache__*
+.vscode*
+
