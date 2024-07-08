@@ -9,6 +9,7 @@
 *TMP*.py
 *TEMP*.ipynb
 *TEMP*.py
+*.pyc
 
 # Folders
 __pycache__*
