@@ -37,3 +37,4 @@ dependencies:
   - pydot
   - distinctipy
   - gdown
+  - segmentation-models-pytorch
